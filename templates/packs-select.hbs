@@ -1,0 +1,23 @@
+<form action="#">
+  <div class="pack-list">
+    <h2>{{localize 'SIDEBAR.TabCompendium'}}</h2>
+    <div class="form-group">
+      <button class="select-all">Выбрать все</button><button class="deselect-all">Снять выделение со всех</button>
+    </div>
+    <div class="form-fields">
+      {{#each compendiums}}
+      <div class="form-group pack">
+        <div class="row-label">
+          <input type="checkbox" data-disable="{{id}}" name="{{id}}" id="{{id}}"
+            class="disable-pack" {{#if enabled}}checked{{/if}}>
+          <label class="index eip-pack-label" for="{{id}}">
+            {{label}} ({{id}})
+          </label>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+
+  <button type="submit" name="submit"><i class="fas fa-save"></i> {{localize 'SETTINGS.Save'}}</button>
+</form>

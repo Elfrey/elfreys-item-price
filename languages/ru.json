@@ -1,0 +1,9 @@
+{
+    "EIP.moduleEnabledName": "Включить модуль?",
+    "EIP.moduleEnabledHint": "Разрешить модулю генерировать цену предмета.",
+    "EIP.itemPricePacksName": "Библиотеки",
+    "EIP.itemPricePacksLabel": "Выбрать библиотеки",
+    "EIP.itemPricePacksHint": "Какие библиотеки использовать",
+    "EIP.priceGenMethodName": "Способ генерации цены",
+    "EIP.priceGenMethodHint": "Каким способом генерировать цены. DMG - Dungeon Master Guide, XGE - Xanathar's Guide to Everything"
+}
