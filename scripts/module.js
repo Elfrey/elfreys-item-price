@@ -191,8 +191,9 @@ Hooks.on('createItem', async (item) => {
 
 
         let isFromEnabledPack = sourcePack && enabledPacks.includes(sourcePack);
+        const actor = item.parent;
 
-        const isMerchantItem = item.parent.flags["item-piles"].data.enabled && item.parent.flags["item-piles"].data.type === 'merchant' && isMerchantGeneratorEnabled;
+        const isMerchantItem = actor?.getFlag('item-piles', 'data.enabled') && actor?.getFlag("item-piles", "data.type") === "merchant" && isMerchantGeneratorEnabled;
 
         if (!isFromEnabledPack && !isMerchantItem) return;
 
