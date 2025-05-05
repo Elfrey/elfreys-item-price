@@ -5,5 +5,7 @@
     "EIP.itemPricePacksLabel": "Выбрать библиотеки",
     "EIP.itemPricePacksHint": "Какие библиотеки использовать",
     "EIP.priceGenMethodName": "Способ генерации цены",
-    "EIP.priceGenMethodHint": "Каким способом генерировать цены. DMG - Dungeon Master Guide, XGE - Xanathar's Guide to Everything"
+    "EIP.priceGenMethodHint": "Каким способом генерировать цены. DMG - Dungeon Master Guide, XGE - Xanathar's Guide to Everything",
+    "EIP.enableForIPMerchantName": "Генерировать для торговцев",
+    "EIP.enableForIPMerchantHint": "При добавлении предмета торговцу ему будет генерироваться цена"
 }

@@ -4,6 +4,7 @@ let EIPModuleSetting = {};
 EIPModuleSetting['ENABLED_PACKS'] = 'ENABLED_PACKS';
 EIPModuleSetting['PRICE_GEN_METHOD'] = 'priceGenMethod';
 EIPModuleSetting['ENABLE_SETTING'] = 'enableSetting';
+EIPModuleSetting['GENERATE_FOR_IP_MERCHANT'] = 'generateForIPMerchant';
 EIPModuleSetting['ITEM_PRICE_PACKS'] = 'itemPricePacks';
 
 const translate = (string) => {
@@ -124,6 +125,14 @@ Hooks.once('init', async () => {
         type: Boolean,
         default: true,
     });
+    game.settings.register(MODULE_ID, EIPModuleSetting.GENERATE_FOR_IP_MERCHANT, {
+        name: translate('EIP.enableForIPMerchantName'),
+        hint: translate('EIP.enableForIPMerchantHint'),
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: true,
+    });
     game.settings.register(MODULE_ID, EIPModuleSetting.PRICE_GEN_METHOD, {
         name: translate('EIP.priceGenMethodName'),
         hint: translate('EIP.priceGenMethodHint'),
@@ -155,7 +164,7 @@ const getPrice = async (
     const generatePrice = async () => {
         if (priceGenerationMethod === 1) {
             const rollPrice = new Roll(diceRollFormula);
-            return (await rollPrice.evaluate({ async: true })).total;
+            return (await rollPrice.evaluate({async: true})).total;
         }
         return getRandomPriceByRange(priceRange[0], priceRange[1]);
     };
@@ -172,21 +181,27 @@ const getPrice = async (
 };
 
 Hooks.on('createItem', async (item) => {
-    const sourcePack = item._stats.compendiumSource.split('.').slice(1, -2).join('.');
-    const isModuleEnabled = game.settings.get(MODULE_ID, EIPModuleSetting.ENABLE_SETTING);
-    if (!isModuleEnabled || item.system.price.value == null) return;
+    if (item._stats.compendiumSource) {
+        const sourcePack = item._stats.compendiumSource.split('.').slice(1, -2).join('.');
+        const isModuleEnabled = game.settings.get(MODULE_ID, EIPModuleSetting.ENABLE_SETTING);
+        const isMerchantGeneratorEnabled = game.settings.get(MODULE_ID, EIPModuleSetting.GENERATE_FOR_IP_MERCHANT);
+        if (!isModuleEnabled || item.system.price.value == null) return;
 
-    const enabledPacks = getSetting(EIPModuleSetting.ENABLED_PACKS);
+        const enabledPacks = getSetting(EIPModuleSetting.ENABLED_PACKS);
 
-    let isFromEnabledPack = sourcePack && enabledPacks.includes(sourcePack);
-    
 
-    if (!isFromEnabledPack) return;
+        let isFromEnabledPack = sourcePack && enabledPacks.includes(sourcePack);
 
-    const priceGenMethod = game.settings.get(MODULE_ID, EIPModuleSetting.PRICE_GEN_METHOD);
-    const priceByRarity = priceGenMethod === 1 ? priceByXGE : priceByDMG;
+        const isMerchantItem = item.parent.flags["item-piles"].data.enabled && item.parent.flags["item-piles"].data.type === 'merchant' && isMerchantGeneratorEnabled;
 
-    updateItemPrice(item, priceGenMethod, priceByRarity);
+        if (!isFromEnabledPack && !isMerchantItem) return;
+
+        const priceGenMethod = game.settings.get(MODULE_ID, EIPModuleSetting.PRICE_GEN_METHOD);
+        const priceByRarity = priceGenMethod === 1 ? priceByXGE : priceByDMG;
+
+
+        updateItemPrice(item, priceGenMethod, priceByRarity);
+    }
 });
 
 async function updateItemPrice(item, priceGenMethod, priceByRarity) {
