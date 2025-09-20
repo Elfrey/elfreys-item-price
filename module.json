@@ -7,8 +7,8 @@
   "manifestPlusVersion": "1.2.0",
   "compatibility": {
     "minimum": 12,
-    "verified": 12,
-    "maximum": 12
+    "verified": 13,
+    "maximum": 13
   },
   "authors": [
     {
@@ -24,8 +24,8 @@
         "type": "system",
         "compatibility": {
           "minimum": "4.3.1",
-          "verified": "4.3.1",
-          "maximum": "4.9.9"
+          "verified": "5.1.9",
+          "maximum": "5.9"
         }
       }
     ],

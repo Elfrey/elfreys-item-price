@@ -159,7 +159,7 @@ const getPrice = async (
     priceGenerationMethod,
     diceRollFormula,
     priceRange,
-    consumable = false
+    consumableType = false
 ) => {
     const generatePrice = async () => {
         if (priceGenerationMethod === 1) {
@@ -170,7 +170,7 @@ const getPrice = async (
     };
 
     let price = await generatePrice();
-    const isConsumable = consumableTypes.includes(consumable);
+    const isConsumable = consumableTypes.includes(consumableType);
 
     if (isConsumable) {
         price *= HALF_PRICE_MULTIPLIER;
@@ -206,14 +206,15 @@ Hooks.on('createItem', async (item) => {
 });
 
 async function updateItemPrice(item, priceGenMethod, priceByRarity) {
-    const rarity = item.system.rarity;
+    const rarity = foundry.utils.getProperty(item, 'system.rarity');
     if (!rarity || !priceByRarity[rarity]) {
         console.warning('No item rarity');
         return;
     }
 
+    const isConsumable = foundry.utils.getProperty(item, 'type') === 'consumable';
     const priceRange = priceByRarity[rarity];
-    const price = await getPrice(priceGenMethod, priceRange, [priceRange[0], priceRange[1]], item.system.consumableType);
+    const price = await getPrice(priceGenMethod, priceRange, [priceRange[0], priceRange[1]], isConsumable ? foundry.utils.getProperty(item, 'system.type.value') : false);
 
     item.update({
         system: {
